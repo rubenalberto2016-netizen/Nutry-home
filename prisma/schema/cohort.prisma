@@ -1,0 +1,28 @@
+// @polsia:user-owned
+
+model CohortOffer {
+  id        String   @id
+  totalUsd  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CohortPaymentAttempt {
+  id                String    @id @default(cuid())
+  workspaceId       String
+  userId            String
+  requestId         String    @unique
+  checkoutSessionId String?   @unique
+  checkoutUrl       String?
+  totalUsd          Int
+  status            String    @default("PENDING")
+  paidAt            DateTime?
+  paidThrough       DateTime?
+  verifiedAt        DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  workspace         Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, createdAt])
+  @@index([userId, status])
+}

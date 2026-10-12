@@ -1,0 +1,68 @@
+// @polsia:user-owned
+
+model EditorialSource {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  createdByUserId String
+  kind          String
+  title         String
+  url           String?
+  excerpt       String
+  checkedAt     DateTime?
+  createdAt     DateTime @default(now())
+
+  @@index([workspaceId, createdAt])
+}
+
+model EditorialDraft {
+  id                    String                  @id @default(cuid())
+  workspaceId           String
+  createdByUserId       String
+  title                 String
+  brief                 String
+  sections              Json
+  sources               Json
+  status                String                  @default("pending_review")
+  approvedAt            DateTime?
+  approvedByUserId      String?
+  approvedBySnapshot    String?
+  latestReviewNote      String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  reviewEvents          EditorialReviewEvent[]
+
+  @@index([workspaceId, createdAt])
+  @@index([status, createdAt])
+}
+
+model EditorialProfessionalReviewer {
+  id                       String   @id @default(cuid())
+  userId                   String   @unique
+  profession               String
+  registryName             String
+  registrationNumber       String
+  jurisdiction             String
+  credentialsConfirmed     Boolean  @default(false)
+  active                   Boolean  @default(true)
+  authorizedByUserId       String
+  authorizedAt             DateTime @default(now())
+  revokedByUserId          String?
+  revokedAt                DateTime?
+  updatedAt                DateTime @updatedAt
+
+  @@index([active, authorizedAt])
+}
+
+model EditorialReviewEvent {
+  id                  String         @id @default(cuid())
+  draftId             String
+  reviewerUserId      String
+  reviewerSnapshot    String
+  action              String
+  note                String?
+  occurredAt          DateTime       @default(now())
+  draft               EditorialDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId, occurredAt])
+  @@index([reviewerUserId, occurredAt])
+}

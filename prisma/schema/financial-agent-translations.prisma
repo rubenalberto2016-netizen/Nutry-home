@@ -1,0 +1,21 @@
+// @polsia:user-owned
+
+model FinancialAgentTranslation {
+  id                String                   @id @default(cuid())
+  submissionId      String
+  sourceType        String
+  sourceKey         String
+  sourceLabel       String
+  originalText      String
+  translatedText    String
+  targetLanguage    String                   @default("es")
+  status            String                   @default("pending")
+  createdAt         DateTime                 @default(now())
+  approvedByUserId  String?
+  approvedAt        DateTime?
+  submission        FinancialAgentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId, createdAt])
+  @@index([sourceType, sourceKey])
+  @@index([status, createdAt])
+}

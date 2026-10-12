@@ -1,0 +1,22 @@
+// @polsia:user-owned
+
+model FinancialAgent {
+  id                 String                     @id @default(cuid())
+  userId             String
+  workspaceId        String?
+  name               String
+  objective          String
+  questions          Json
+  requestedDocuments Json                       @default("[]")
+  status             String                     @default("draft")
+  activeConfigurationId String?
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+  workspace          Workspace?                @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  submissions        FinancialAgentSubmission[]
+  configurations     FinancialAgentConfiguration[]
+
+  @@index([userId, updatedAt])
+  @@index([workspaceId, updatedAt])
+  @@index([activeConfigurationId])
+}

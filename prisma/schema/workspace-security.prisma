@@ -1,0 +1,48 @@
+// @polsia:user-owned
+
+model WorkspaceSubmissionAccessGrant {
+  id                String                   @id @default(cuid())
+  submissionId      String
+  userId            String
+  role              String
+  grantedByUserId   String
+  active            Boolean                  @default(true)
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  revokedAt         DateTime?
+  submission        FinancialAgentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@unique([submissionId, userId])
+  @@index([userId, active])
+}
+
+model WorkspaceDocumentRetention {
+  id                String    @id @default(cuid())
+  workspaceId       String    @unique
+  retentionDays     Int?
+  updatedByUserId   String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  workspace         Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model WorkspaceAccessEvent {
+  id                    String                    @id @default(cuid())
+  workspaceId           String
+  submissionId          String?
+  documentId            String?
+  actorUserId           String?
+  actorLabel            String?
+  subjectUserId         String?
+  action                String
+  previousRole          String?
+  newRole               String?
+  previousRetentionDays Int?
+  newRetentionDays      Int?
+  occurredAt            DateTime                  @default(now())
+  workspace             Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  submission            FinancialAgentSubmission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, occurredAt])
+  @@index([submissionId, occurredAt])
+}

@@ -1,0 +1,58 @@
+/* @polsia:user-owned — paleta serena para la propuesta educativa. */
+
+:root {
+  color-scheme: light;
+  --background: #f5f6ef;
+  --foreground: #20352b;
+  --card: #fffefa;
+  --card-foreground: #20352b;
+  --popover: #fffefa;
+  --popover-foreground: #20352b;
+  --primary: #315e4b;
+  --primary-foreground: #ffffff;
+  --secondary: #e9eee5;
+  --secondary-foreground: #263d31;
+  --muted: #eef0e8;
+  --muted-foreground: #58695e;
+  --accent: #dce9dc;
+  --accent-foreground: #284b39;
+  --destructive: #a83f3b;
+  --border: #d9e0d6;
+  --input: #cbd6ca;
+  --ring: #668b70;
+  --radius: 1rem;
+  --font-body: "Aptos", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --text-display: 3.75rem;
+  --text-h1: 3.5rem;
+  --text-h2: 2.5rem;
+  --text-h3: 1.5rem;
+  --spacing-stack: 1.25rem;
+  --spacing-block: 4rem;
+  --spacing-gutter: 1.25rem;
+  --spacing-section: 6rem;
+  --spacing-section-lg: 8rem;
+  --container-page: 80rem;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #17221c;
+  --foreground: #ecf1e8;
+  --card: #202e25;
+  --card-foreground: #ecf1e8;
+  --popover: #202e25;
+  --popover-foreground: #ecf1e8;
+  --primary: #9fcca5;
+  --primary-foreground: #17221c;
+  --secondary: #28382e;
+  --secondary-foreground: #e4eee3;
+  --muted: #28352c;
+  --muted-foreground: #b1c0b3;
+  --accent: #304538;
+  --accent-foreground: #e4eee3;
+  --destructive: #f28f88;
+  --border: #3b4b3e;
+  --input: #4b5f4d;
+  --ring: #9fcca5;
+}

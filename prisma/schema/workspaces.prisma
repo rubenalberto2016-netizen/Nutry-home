@@ -1,0 +1,55 @@
+// @polsia:user-owned
+
+model Workspace {
+  id          String                  @id @default(cuid())
+  name        String
+  ownerUserId String                  @unique
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  members     WorkspaceMembership[]
+  subscription WorkspaceSubscription?
+  agents      FinancialAgent[]
+  submissions FinancialAgentSubmission[]
+  retentionPolicy WorkspaceDocumentRetention?
+  accessEvents WorkspaceAccessEvent[]
+  paymentAttempts CohortPaymentAttempt[]
+}
+
+model WorkspaceMembership {
+  id          String    @id @default(cuid())
+  workspaceId String
+  userId      String    @unique
+  role        String    @default("MEMBER")
+  createdAt   DateTime  @default(now())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([workspaceId, createdAt])
+}
+
+model WorkspaceSubscription {
+  id                      String    @id @default(cuid())
+  workspaceId             String    @unique
+  provider                String    @default("PAYPAL")
+  status                  String    @default("PENDING")
+  planId                  String
+  providerSubscriptionId  String?   @unique
+  paypalRequestId         String    @unique
+  approvalUrl             String?
+  paidThrough             DateTime?
+  lastPaymentAt           DateTime?
+  lastEventAt             DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  workspace               Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([status, paidThrough])
+}
+
+model ProcessedPayPalEvent {
+  id         String   @id @default(cuid())
+  eventId    String   @unique
+  eventType  String
+  resourceId String?
+  createdAt  DateTime @default(now())
+}

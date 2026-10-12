@@ -1,0 +1,59 @@
+// @polsia:user-owned
+
+model FinancialAgentSubmission {
+  id                            String                            @id @default(cuid())
+  agentId                       String
+  workspaceId                   String
+  userId                        String
+  answers                       Json
+  questionSnapshot              Json
+  requestedDocumentsSnapshot    Json
+  submittedAt                   DateTime                          @default(now())
+  reviewStatus                  String                            @default("pending_review")
+  reviewResult                  String?
+  reviewUpdatedAt               DateTime?
+  agent                         FinancialAgent                    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  workspace                     Workspace                         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  documents                     FinancialAgentSubmissionDocument[]
+  reviewEvents                  FinancialAgentReviewEvent[]
+  translations                  FinancialAgentTranslation[]
+  accessGrants                  WorkspaceSubmissionAccessGrant[]
+  accessEvents                  WorkspaceAccessEvent[]
+
+  @@unique([agentId, userId])
+  @@index([workspaceId, submittedAt])
+  @@index([userId, submittedAt])
+  @@index([reviewStatus, submittedAt])
+}
+
+model FinancialAgentReviewEvent {
+  id               String                   @id @default(cuid())
+  submissionId     String
+  reviewerUserId   String
+  action           String
+  previousStatus   String
+  newStatus        String
+  resultSnapshot   String?
+  occurredAt       DateTime                 @default(now())
+  submission       FinancialAgentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId, occurredAt])
+  @@index([reviewerUserId, occurredAt])
+}
+
+model FinancialAgentSubmissionDocument {
+  id           String                  @id @default(cuid())
+  submissionId String
+  documentName String
+  fileName     String
+  mimeType     String
+  sizeBytes    Int
+  content      Bytes?
+  deletedAt    DateTime?
+  classification String                @default("Sin clasificar")
+  status       String                  @default("pending")
+  createdAt    DateTime                @default(now())
+  submission   FinancialAgentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+}

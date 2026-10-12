@@ -1,0 +1,18 @@
+// @polsia:user-owned
+
+model FinancialAgentConfiguration {
+  id                 String         @id @default(cuid())
+  financialAgentId   String
+  version            Int
+  rules              String         @default("")
+  instructions       String         @default("")
+  supervisionLevel   String         @default("Alta")
+  status             String         @default("draft")
+  archivedAt         DateTime?
+  createdByUserId    String
+  createdAt          DateTime       @default(now())
+  financialAgent     FinancialAgent @relation(fields: [financialAgentId], references: [id], onDelete: Cascade)
+
+  @@unique([financialAgentId, version])
+  @@index([financialAgentId, status, createdAt])
+}
